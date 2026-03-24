@@ -141,8 +141,10 @@ void VisitBlock(int r, int c) {
     for (int k = 0; k < 8; ++k) {
       int ni = r + dx[k];
       int nj = c + dy[k];
-      if (ni >= 0 && ni < rows && nj >= 0 && nj < columns && !is_visited[ni][nj] && !is_marked[ni][nj]) {
-        VisitBlock(ni, nj);
+      VisitBlock(ni, nj);
+      // Check if game ended during recursion
+      if (game_state != 0) {
+        return;
       }
     }
   }
@@ -195,6 +197,7 @@ void MarkMine(int r, int c) {
 
   // Check if it's not a mine - game over
   if (!is_mine[r][c]) {
+    is_visited[r][c] = true;  // Mark as visited (will show as 'X')
     game_state = -1;  // Game over
     return;
   }
